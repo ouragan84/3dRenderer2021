@@ -1,5 +1,9 @@
 package renderer.world;
 
+import java.awt.Color;
+import java.awt.Polygon;
+
+import renderer.display.ZBuffer;
 import renderer.point.MyPoint;
 import renderer.point.MyVector;
 import renderer.point.PointConverter;
@@ -13,6 +17,8 @@ public class Camera {
 	
 	protected double FovX = 90.0;
 	protected double FovY = 90.0;
+	private ZBuffer zBuffer;
+	public EntityManager manager;
 	
 	protected static final double far = 100000;
 	protected static final double near = 0;
@@ -25,10 +31,12 @@ public class Camera {
 	 * @param rotation
 	 * @param scale
 	 */
-	public Camera(MyPoint position, MyVector rotation, MyVector scale) {
+	public Camera(MyPoint position, MyVector rotation, MyVector scale, int width, int height, EntityManager manager) {
 		this.position = position;
 		this.rotation = rotation;
 		this.scale = scale;
+		this.zBuffer = new ZBuffer(width, height);
+		this.manager = manager;
 	}
 	
 	/**
@@ -104,5 +112,15 @@ public class Camera {
 	}
 	
 	public void update() {
+	}
+
+	public ZBuffer getZBuffer() {
+		// TODO Auto-generated method stub
+		return this.zBuffer;
+	}
+	
+	public void updateBuffer() {
+		zBuffer.clearBuffer();
+		manager.updatePolys(this);
 	}
 }

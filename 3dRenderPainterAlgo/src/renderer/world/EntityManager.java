@@ -31,14 +31,11 @@ public class EntityManager {
 		this.entities = new ArrayList<IEntity>();
 	}
 	
-	/**
-	 * @param userInput
-	 */
-	public void init(UserInput userInput, int fps) {
+	public void init(UserInput userInput, int fps, int width, int height) {
 		this.mouse = userInput.mouse;
 		this.keyboard = userInput.keyboard;
 		
-		this.camera = new ControlCamera(new MyPoint(500, 0, 0), new MyVector(0, 0, 0), new MyVector(5, 5, 5), new MyVector(600, 600, 600), new MyVector(1000, 600, 600), fps, this);
+		this.camera = new ControlCamera(new MyPoint(500, 0, 0), new MyVector(0, 0, 0), new MyVector(5, 5, 5), new MyVector(600, 600, 600), new MyVector(1000, 600, 600), fps, this, width, height);
 		PointConverter.camera = this.camera;
 		
 		this.entities.add(BasicEntityBuilder.createCube(new MyPoint(0, 150, 0), new MyPoint(0, 150, 0), new MyVector(1, 1, 1), new MyVector(0, 0, 0), 75));
@@ -61,55 +58,18 @@ public class EntityManager {
 		System.out.println("(-500, 200, -300) goes to " + PointConverter.viewToScreen(test));
 		
 		this.setLighting();
-		this.sortPolygons();
+		this.camera.updateBuffer();
+//		this.sortPolygons();
 	}
-
-	
-//	private int initialX, initialY;
 	
 	public void update() {
-//		lightVector.rotateX(0.52, true);
-//		lightVector.rotateY(1.23, true);
-//		lightVector.rotateZ(1.02, false);
-//		this.setLighting();
-		
-//		int x = this.mouse.getX();
-//		int y = this.mouse.getY();
-//		if(this.mouse.getB() == ClickType.LeftClick) {
-//			int xDif = x - initialX;
-//			int yDif = y - initialY;
-//			
-//			this.rotateEntities(true, 0, MOUSE_SENSITIVITY*yDif, MOUSE_SENSITIVITY*xDif);
-//		}else if(mouse.getB() == ClickType.RightClick) {
-//			int xDif = x - initialX;
-//			this.rotateEntities(true, MOUSE_SENSITIVITY*xDif, 0, 0);
-//		}
-		
 		this.camera.update();
 	}
-
-	public void render(Graphics g) {
+	
+	public void updatePolys(Camera cam) {
 		for(MyPolygon p : visiblePolys) {
-			p.render(g);
+			p.updateBuffer(cam);
 		}
-	}
-	
-	@SuppressWarnings("unused")
-	private void rotateEntities(boolean CW, double xDegrees, double yDegrees, double zDegrees) {
-		for(IEntity entity : this.entities) {
-			entity.rotate(CW, xDegrees, yDegrees, zDegrees);
-		}
-		
-		this.sortPolygons();
-		this.setLighting();
-	}
-	
-	public void sortPolygons() {
-		this.visiblePolys.clear();
-		for(MyPolygon p : polygons) {
-			if(p.updateVisibility(camera)) this.visiblePolys.add(p);
-		}
-		this.visiblePolys = MyPolygon.sortPolygons(this.visiblePolys, this.camera);
 	}
 	
 	public void setLighting() {
@@ -124,5 +84,9 @@ public class EntityManager {
 	
 	public Keyboard getKeyboard() {
 		return this.keyboard;
+	}
+
+	public Camera getCamera() {
+		return this.camera;
 	}
 }

@@ -3,12 +3,15 @@ import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Polygon;
 import java.awt.image.BufferStrategy;
 
 import javax.swing.JFrame;
 
+import renderer.display.ZBuffer;
 import renderer.input.UserInput;
 import renderer.world.EntityManager;
+import renderer.world.Camera;
 
 public class Display extends Canvas implements Runnable{
 	
@@ -21,6 +24,8 @@ public class Display extends Canvas implements Runnable{
 	public static final int HEIGHT = 800;
 	private static final int UPDATES_PER_SECONDS = 60;
 	private static boolean running = false;
+	
+	private Camera MainCamera;
 	
 	private EntityManager entityManager;
 	
@@ -79,7 +84,8 @@ public class Display extends Canvas implements Runnable{
 		double delta = 0;
 		int frames = 0;
 		
-		entityManager.init(userInput, UPDATES_PER_SECONDS);
+		entityManager.init(userInput, UPDATES_PER_SECONDS, WIDTH, HEIGHT);
+		this.MainCamera = entityManager.getCamera();
 		
 		while (running) {
 			long now = System.nanoTime();
@@ -111,7 +117,12 @@ public class Display extends Canvas implements Runnable{
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, WIDTH, HEIGHT);
 		
-		this.entityManager.render(g);
+		MainCamera.getZBuffer().drawBuffer(g);
+		
+//		MainCamera.getZBuffer().clearBuffer();
+//		int[] x = {200, 400, 200};
+//		int[] y = {200, 200, 400};
+//		MainCamera.getZBuffer().pushFilledTriangle(new Polygon(x, y, 3), (float) 50.0, Color.RED);
 		
 		g.dispose();
 		bs.show();
