@@ -8,7 +8,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import renderer.display.ZBuffer;
 import renderer.point.MyPoint;
 import renderer.point.MyVector;
 import renderer.point.PointConverter;
@@ -42,27 +41,15 @@ public class MyPolygon {
 		this.visible = false;
 	}
 	
-//	public void render(Graphics g) {
-//		Polygon poly = new Polygon();
-//		for(int i = 0; i < this.points.length; i++) {
-//			Point p = PointConverter.convertPoint(points[i]);
-//			poly.addPoint(p.x, p.y);
-//		}
-//		
-//		g.setColor(this.lighingColor);
-//		g.fillPolygon(poly);
-//	}
-	
-	public void updateBuffer(Camera cam) {
+	public void render(Graphics g) {
 		Polygon poly = new Polygon();
 		for(int i = 0; i < this.points.length; i++) {
 			Point p = PointConverter.convertPoint(points[i]);
 			poly.addPoint(p.x, p.y);
 		}
-		float dis = (float) cam.forwardDistance(getAveragePoint());
-		if(dis >= cam.getNear()) {
-			cam.getZBuffer().pushFilledTriangle(poly, dis, this.lighingColor);
-		}
+		
+		g.setColor(this.lighingColor);
+		g.fillPolygon(poly);
 	}
 	
 	public void rotate(boolean CW, double xDegrees, double yDegrees, double zDegrees, MyPoint origin) {
@@ -90,6 +77,27 @@ public class MyPolygon {
 	
 	public void setColor(Color color) {
 		this.baseColor = color;
+	}
+	
+	public static List<MyPolygon> sortPolygons(List<MyPolygon> tmpPolyArray, Camera cam) {
+		
+		Collections.sort(tmpPolyArray, new Comparator<MyPolygon>() {
+			public int compare(MyPolygon p1, MyPolygon p2) {
+				MyPoint p1Avg = p1.getAveragePoint();
+				MyPoint p2Avg = p2.getAveragePoint();
+				MyPoint cameraPoint = cam.getPosition();
+				double p1Dist = MyPoint.dist(p1Avg, cameraPoint);
+				double p2Dist = MyPoint.dist(p2Avg, cameraPoint);
+				double dist = p1Dist - p2Dist;
+				
+				if(dist == 0)
+					return 0;
+				
+				return dist < 0 ? 1 : -1;
+			}
+		});
+		
+		return tmpPolyArray;
 	}
 	
 	public void updateLightingRatio(MyVector lightVector) {

@@ -10,7 +10,7 @@ public class ControlCamera extends Camera {
 
 	private MyVector speed;
 	private MyVector sprintSpeed;
-	
+	private EntityManager manager;
 	private static final double MOUSE_SENSITIVITY_PITCH = .2;
 	private static final double MOUSE_SENSITIVITY_YAW = .2;
 	
@@ -21,17 +21,18 @@ public class ControlCamera extends Camera {
 	 * @param speed <forwar/backward, right/left, up/down>
 	 * @param keyboard 
 	 */
-	public ControlCamera(MyPoint position, MyVector rotation, MyVector scale, MyVector speed, MyVector sprintSpeed, int fps, EntityManager manager, int width, int height) {
-		super(position, rotation, scale, width, height, manager);
+	public ControlCamera(MyPoint position, MyVector rotation, MyVector scale, MyVector speed, MyVector sprintSpeed, int fps, EntityManager manager) {
+		super(position, rotation, scale);
 		this.speed = new MyVector(speed.x/fps, speed.y/fps, speed.z/fps);
 		this.sprintSpeed = new MyVector(sprintSpeed.x/fps, sprintSpeed.y/fps, sprintSpeed.z/fps);
+		this.manager = manager;
 	}
 	
 	private int initialX, initialY;
 	
 	public void update() {
-		Keyboard keyboard = this.manager.getKeyboard();
-		Mouse mouse = this.manager.getMouse();
+		Keyboard keyboard = manager.getKeyboard();
+		Mouse mouse = manager.getMouse();
 		
 		int mx = mouse.getX();
 		int my = mouse.getY();
@@ -43,7 +44,7 @@ public class ControlCamera extends Camera {
 			this.rotateZ(-MOUSE_SENSITIVITY_YAW*xDif);
 			
 			if(xDif != 0 && yDif != 0) {
-				this.updateBuffer();
+				manager.sortPolygons();
 			}
 		}
 		
@@ -86,7 +87,7 @@ public class ControlCamera extends Camera {
 			yTrans = y * Math.cos(theta) + x * Math.sin(theta);
 			
 			this.translate(xTrans, yTrans, z);
-			this.updateBuffer();
+			manager.sortPolygons();
 		}
 		
 		mouse.resetScroll();
