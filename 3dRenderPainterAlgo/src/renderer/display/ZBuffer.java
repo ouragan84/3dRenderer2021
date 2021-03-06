@@ -54,14 +54,6 @@ public class ZBuffer {
  
     public void pushFilledTriangle(Polygon polygon, float depth, Color color) { 
     	
-//    	for(int i = 0; i < polygon.npoints; i++) {
-//    		if(polygon.xpoints[i] >= 0 && polygon.ypoints[i] >= 0 && polygon.xpoints[i] < this.screenHeight && polygon.ypoints[i] < this.screenWidth) {
-//    			this.buffer[polygon.xpoints[i]][polygon.ypoints[i]] = depth;
-//				this.colors[polygon.xpoints[i]][polygon.ypoints[i]] = color;
-//    		}
-//		}
-//    	
-    	
 //    	int[] xPoints = polygon.xpoints;
 //    	int[] yPoints = polygon.ypoints;
 //    	
@@ -125,7 +117,8 @@ public class ZBuffer {
 		
     	int a = Math.max(0, polygon.xpoints[indexOfSmallest(polygon.xpoints)]);
     	int b = Math.min(this.screenWidth-1, polygon.xpoints[indexOfLargest(polygon.xpoints)]);
-    	for(int i = Math.max(0, polygon.ypoints[indexOfSmallest(polygon.ypoints)]); i <= Math.min(this.screenHeight-1, polygon.ypoints[indexOfLargest(polygon.ypoints)]); i++) {
+    	int c = Math.min(this.screenHeight-1, polygon.ypoints[indexOfLargest(polygon.ypoints)]);
+    	for(int i = Math.max(0, polygon.ypoints[indexOfSmallest(polygon.ypoints)]); i <= c; i++) {
 			for(int j = a; j <= b; j++) {
 				if(polygon.contains(j, i) && depth < this.buffer[j][i]) {
     				this.buffer[j][i] = depth;
