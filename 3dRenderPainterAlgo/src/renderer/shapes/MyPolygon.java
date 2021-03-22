@@ -13,7 +13,7 @@ import renderer.point.MyVector;
 import renderer.point.PointConverter;
 import renderer.world.Camera;
 
-public class MyPolygon {
+public class MyPolygon implements WorldShape{
 	
 	private static final double AMBIENT_LIGHTNING = .2;
 	private static final double LIGHT_SHARPNESS = .95;
@@ -79,26 +79,7 @@ public class MyPolygon {
 		this.baseColor = color;
 	}
 	
-	public static List<MyPolygon> sortPolygons(List<MyPolygon> tmpPolyArray, Camera cam) {
-		
-		Collections.sort(tmpPolyArray, new Comparator<MyPolygon>() {
-			public int compare(MyPolygon p1, MyPolygon p2) {
-				MyPoint p1Avg = p1.getAveragePoint();
-				MyPoint p2Avg = p2.getAveragePoint();
-				MyPoint cameraPoint = cam.getPosition();
-				double p1Dist = MyPoint.dist(p1Avg, cameraPoint);
-				double p2Dist = MyPoint.dist(p2Avg, cameraPoint);
-				double dist = p1Dist - p2Dist;
-				
-				if(dist == 0)
-					return 0;
-				
-				return dist < 0 ? 1 : -1;
-			}
-		});
-		
-		return tmpPolyArray;
-	}
+	
 	
 	public void updateLightingRatio(MyVector lightVector) {
 		if(this.points.length < 3) {
@@ -126,7 +107,7 @@ public class MyPolygon {
 		this.lighingColor = new Color(red, green, blue);
 	}
 	
-	private MyPoint getAveragePoint() {
+	public MyPoint getAveragePoint() {
 		double x = 0;
 		double y = 0;
 		double z = 0;
@@ -148,6 +129,14 @@ public class MyPolygon {
 			p.x += x;
 			p.y += y;
 			p.z += z;
+		}
+	}
+	
+	public void setPos(double x, double y, double z, MyPoint origin) {
+		for(MyPoint p : points) {
+			p.x = p.x - origin.x + x;
+			p.y = p.y - origin.y + y;
+			p.z = p.z - origin.z + z;
 		}
 	}
 	

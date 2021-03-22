@@ -15,7 +15,7 @@ public class Camera {
 	protected double FovY = 90.0;
 	
 	protected static final double far = 100000;
-	protected static final double near = 0;
+	protected static final double near = 10;
 
 	protected static final double MAX_PITCH = 90;
 	protected static final double MIN_PITCH = 270;

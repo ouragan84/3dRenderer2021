@@ -4,12 +4,15 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
+import renderer.entity.CurveLine;
 import renderer.entity.Entity;
 import renderer.entity.IEntity;
 import renderer.point.MyPoint;
 import renderer.point.MyVector;
+import renderer.shapes.LineSegment;
 import renderer.shapes.MyPolygon;
 import renderer.shapes.Polyhedron;
+import renderer.shapes.WorldShape;
 
 public class BasicEntityBuilder {
 	
@@ -189,4 +192,32 @@ public class BasicEntityBuilder {
 		return new Entity(tetras);
 		
 	}
+	
+	public static IEntity createLine(MyPoint start, MyPoint end, double numberSegment, MyPoint origin, MyVector scale, MyVector rotation, Color color, boolean isDecaying) {
+		List<LineSegment> lines = new ArrayList<LineSegment>();
+		
+		for(int i = 0; i < numberSegment; i++) {
+			double t = i/ (double)numberSegment;
+			double s = (i+1)/ (double)numberSegment;
+			lines.add(new LineSegment(new MyPoint(start.x+(end.x-start.x)*t, start.y+(end.y-start.y)*t, start.z+(end.z-start.z)*t), 
+					new MyPoint(start.x+(end.x-start.x)*(s), start.y+(end.y-start.y)*(s), start.z+(end.z-start.z)*(s))));
+		}
+		
+		return new CurveLine(lines, scale, rotation, origin, color, isDecaying);
+	}
+	
+//	public static IEntity createVectorFunction(String functionX, String functionY, String functionZ, MyVector offset, double startT, double endT, double deltaT) {
+//		
+//		myInterface r = new myInterface() {
+//            public MyVector func(double T) 
+//            { 
+//                
+//            }; 
+//        };
+//		
+//	}
+//	
+//	interface myInterface { 
+//		MyVector func(double T); 
+//    } 
 }

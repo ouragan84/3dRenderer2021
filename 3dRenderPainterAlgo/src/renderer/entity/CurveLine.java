@@ -1,38 +1,39 @@
-package renderer.shapes;
+package renderer.entity;
 
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import renderer.point.MyPoint;
 import renderer.point.MyVector;
+import renderer.shapes.LineSegment;
+import renderer.shapes.MyPolygon;
+import renderer.shapes.Polyhedron;
+import renderer.shapes.WorldShape;
 
-public class Polyhedron {
+public class CurveLine implements IEntity {
 	
-	private MyPolygon[] polygons;
+	private static final float decayFactor = 0.95f;
+	private List<LineSegment> lines;
 	private MyVector scale;
 	private MyVector rotation;
-	private Color color;
 	private MyPoint origin;
-	private static final double decayFactor = 0.95;
+	private Color color;
 	
-	public Polyhedron(MyPoint origin, MyVector scale, MyVector rotation, Color color, boolean decayColor, MyPolygon... polygons) {
-		this.color = color;
-		this.origin = origin;
+	public CurveLine(List<LineSegment> lines, MyVector scale, MyVector rotation, MyPoint origin, Color color, boolean isDecaying) {
+		this.lines = lines;
+		this.scale = scale;
 		this.rotation = rotation;
-		this.polygons = polygons;
-		if(decayColor) {
+		this.origin = origin;
+		this.color = color;
+		
+		if(isDecaying) {
 			this.setDecayingPolygonColor();
 		}else {
 			this.setPolygonColor();
 		}
 	}
-
-	public Polyhedron(MyPoint origin, MyVector scale, MyVector rotation, MyPolygon... polygons) {
-		this.color = Color.WHITE;
-		this.origin = origin;
-		this.rotation = rotation;
-		this.polygons = polygons;
-	}
-
 	
 	public MyVector getScale() {
 		return scale;
@@ -57,37 +58,27 @@ public class Polyhedron {
 	public void setOrigin(MyPoint origin) {
 		this.origin = origin;
 	}
-	//please change to translateOffset and add real translate method
+	
 	public void translate(double x, double y, double z) {
-		for(MyPolygon p : this.polygons) {
+		for(LineSegment p : this.lines) {
 			p.translate(x, y, z);
 		}
-		origin.x += x;
-		origin.y += y;
-		origin.z += z;
-	}
-	
-	public void setPos(double x, double y, double z) {
-		for(MyPolygon p : this.polygons) {
-			p.setPos(x, y, z, origin);
-		}
-		origin = new MyPoint(x,y,z);
 	}
 	
 	public void rotate(boolean CW, double xDegrees, double yDegrees, double zDegrees) {
-		for(MyPolygon p : this.polygons) {
+		for(LineSegment p : this.lines) {
 			p.rotate(CW, xDegrees, yDegrees, zDegrees, this.origin);
 		}
 	}
 	
 	private void setPolygonColor() {
-		for(MyPolygon poly : this.polygons) {
+		for(LineSegment poly : this.lines) {
 			poly.setColor(this.color);
 		}
 	}
 	
 	private void setDecayingPolygonColor() {
-		for(MyPolygon poly : this.polygons) {
+		for(LineSegment poly : this.lines) {
 			poly.setColor(this.color);
 			int r = (int) (this.color.getRed() * decayFactor);
 			int g = (int) (this.color.getGreen() * decayFactor);
@@ -96,9 +87,26 @@ public class Polyhedron {
 		}
 	}
 	
-	public MyPolygon[] getPolygons() {
-		System.out.println("        Tetra " + polygons.length);
-		return polygons;
+	public List<WorldShape> getPolygons() {
+		System.out.println("        Line " + lines.size());
+		List<WorldShape> tmp = new ArrayList<WorldShape>();
+		for(LineSegment l : lines) {
+			tmp.add(l);
+		}
+		return tmp;
 	}
-	
+
+	@Override
+	public void setPos(double x, double y, double z) {
+		for(LineSegment l : this.lines) {
+			l.setPos(x,y,z);
+		}
+	}
+
+	@Override
+	public Object getEntity() {
+		// TODO Auto-generated method stub
+		return this;
+	}
+
 }
