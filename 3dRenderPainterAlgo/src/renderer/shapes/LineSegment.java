@@ -22,6 +22,14 @@ public class LineSegment implements WorldShape {
 		this.visible = false;
 	}
 	
+	public void setStartPoint(MyPoint p) {
+		this.StartPoint = p;
+	}
+	
+	public void setEndPoint(MyPoint p) {
+		this.EndPoint = p;
+	}
+	
 	public void setColor(Color color) {
 		this.color = color;
 	}
@@ -89,5 +97,9 @@ public class LineSegment implements WorldShape {
 		StartPoint.y = y;
 		StartPoint.z = z;
 		
+	}
+
+	public Color getColor() {
+		return this.color;
 	}
 }

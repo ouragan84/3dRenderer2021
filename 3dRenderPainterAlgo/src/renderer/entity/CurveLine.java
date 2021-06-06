@@ -88,7 +88,7 @@ public class CurveLine implements IEntity {
 	}
 	
 	public List<WorldShape> getPolygons() {
-		System.out.println("        Line " + lines.size());
+//		System.out.println("        Line " + lines.size());
 		List<WorldShape> tmp = new ArrayList<WorldShape>();
 		for(LineSegment l : lines) {
 			tmp.add(l);
@@ -108,5 +108,4 @@ public class CurveLine implements IEntity {
 		// TODO Auto-generated method stub
 		return this;
 	}
-
 }

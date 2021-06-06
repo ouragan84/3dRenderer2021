@@ -43,16 +43,6 @@ public class PointConverter {
 	}
 	
 	public static Point viewToScreen(MyPoint in) {
-//		double dist = Math.sqrt(Math.pow(in.z, 2) + Math.pow(in.y, 2));
-//		double theta = Math.atan2(in.z, in.y);
-//		
-//		dist *= (camera.getDepthOfField() == 0? 1 : Math.abs(camera.getDepthOfField()/(camera.getDepthOfField() - in.x)));
-//		
-//		Point out = new Point(
-//				(int) (Display.WIDTH / 2 + (dist * Math.cos(theta))),
-//				(int) (Display.HEIGHT / 2 - (dist * Math.sin(theta))));
-//		
-//		return out;
 		
 		double halfPlaneWidth = Math.abs(in.x) * Math.tan((Math.PI/360) * camera.getFovX());
 		double halfPlaneHeight = Math.abs(in.x) * Math.tan((Math.PI/360) * camera.getFovY());

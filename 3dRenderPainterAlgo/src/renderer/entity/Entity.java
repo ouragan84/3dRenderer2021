@@ -27,7 +27,7 @@ public class Entity implements IEntity {
 	
 	public List<WorldShape> getPolygons(){
 		List<WorldShape> polys = new ArrayList<WorldShape>();
-		System.out.println("    Entity " + this.tetrahedrons.size());
+//		System.out.println("    Entity " + this.tetrahedrons.size());
 		for(Polyhedron p : this.tetrahedrons) {
 			polys.addAll(Arrays.asList(p.getPolygons()));
 		}

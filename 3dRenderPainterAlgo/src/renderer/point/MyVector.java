@@ -31,7 +31,7 @@ public class MyVector {
 		return Math.sqrt(x*x + y*y + z*z);
 	}
 
-	public static MyVector abs(MyVector v) {
+	public static MyVector makeUnitVector(MyVector v) {
 		double mag = v.magnitude();
 		return new MyVector(v.x/mag, v.y/mag, v.z/mag);
 	}
@@ -58,5 +58,24 @@ public class MyVector {
 		theta += 2*Math.PI/360*degrees*(CW?-1:1);
 		this.y = radius * Math.cos(theta);
 		this.x = radius * Math.sin(theta);
+	}
+
+	public MyVector scale(double s) {
+		return new MyVector(this.x * s, this.y * s, this.z * s);
+	}
+
+	public MyVector add(MyVector v2) {
+		return new MyVector(this.x + v2.x, this.y + v2.y, this.z + v2.z);
+	}
+
+	public static MyVector[] initArray(MyVector[] myVectors) {
+		for(int i = 0; i < myVectors.length; i++) {
+			myVectors[i] = new MyVector();
+		}
+		return myVectors;
+	}
+	
+	public String toString() {
+		return "<" + x + ", " + y + ", " + z + ">";
 	}
 }

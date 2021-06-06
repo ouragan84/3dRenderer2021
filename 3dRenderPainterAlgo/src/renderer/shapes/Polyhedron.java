@@ -97,7 +97,7 @@ public class Polyhedron {
 	}
 	
 	public MyPolygon[] getPolygons() {
-		System.out.println("        Tetra " + polygons.length);
+//		System.out.println("        Tetra " + polygons.length);
 		return polygons;
 	}
 	

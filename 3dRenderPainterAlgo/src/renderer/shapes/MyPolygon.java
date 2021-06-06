@@ -88,8 +88,8 @@ public class MyPolygon implements WorldShape{
 		
 		MyVector v1 = new MyVector(this.points[0], this.points[1]);
 		MyVector v2 = new MyVector(this.points[1], this.points[2]);
-		MyVector normal = MyVector.abs(MyVector.cross(v2, v1));
-		MyVector lightNormal = MyVector.abs(lightVector);
+		MyVector normal = MyVector.makeUnitVector(MyVector.cross(v2, v1));
+		MyVector lightNormal = MyVector.makeUnitVector(lightVector);
 		
 		double dot = MyVector.dot(normal, lightNormal);
 		double sign = dot < 0 ? 1 : -1;
